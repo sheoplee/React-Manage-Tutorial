@@ -8,7 +8,7 @@ class Customer extends React.Component {
 
   render () {
     return (
-        <div>
+        // <div>
         <TableRow>
             <TableCell>({this.props.id})</TableCell>
             <TableCell><img src={this.props.image} alt="profile"/></TableCell>
@@ -17,7 +17,7 @@ class Customer extends React.Component {
             <TableCell><p>{this.props.gender}</p></TableCell>
             <TableCell><p>{this.props.job}</p></TableCell>
         </TableRow>
-        </div>
+        // </div>
       );
   }
 }

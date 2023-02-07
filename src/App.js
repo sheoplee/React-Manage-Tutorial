@@ -1,7 +1,18 @@
-import { Table, TableBody } from '@material-ui/core';
+import { Paper, Table, TableBody, TableCell, TableHead, TableRow, withStyles } from '@material-ui/core';
 import React, {Component} from 'react';
 import './App.css';
 import Customer from './components/Customer';
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    mardinTop: theme.spacing(3), //`theme.spacing(y)`
+    overFlex: "auto"
+  },
+  table: {
+    minWidth: 1080
+  }
+})
 
 const customers = [
   {
@@ -30,12 +41,22 @@ const customers = [
   }
 ]
 
-function App() {
-
-  return (
-    <div>
-      <h1>헬로</h1>
-      { <Table>
+class App extends Component {
+  render () {
+    const { classes } = this.props;
+    return (
+      <Paper className={classes.root}>
+       <Table className={classes.table}>
+        <TableHead>
+          <TableRow>
+            <TableCell>번호</TableCell>
+            <TableCell>이미지</TableCell>
+            <TableCell>이름</TableCell>
+            <TableCell>생년월일</TableCell>
+            <TableCell>성별</TableCell>
+            <TableCell>직업</TableCell>
+          </TableRow>
+        </TableHead>
         <TableBody>
           { customers.map(c => { return (
             <Customer
@@ -50,9 +71,10 @@ function App() {
             )})
           }
         </TableBody>
-      </Table> }
-    </div>
-  );
+      </Table>        
+      </Paper>
+      );
+  }
 }
 
-export default App;
+export default withStyles(styles)(App);
