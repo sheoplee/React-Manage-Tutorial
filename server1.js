@@ -1,4 +1,3 @@
-// Include it and extract some methods for convenience
 const express = require('express');
 const cors =require('cors');
 const bodyParser = require('body-parser');
@@ -6,7 +5,7 @@ const app = express();
 const user = require('./routes/user')
 const port = process.env.PORT || 5000;
 const morgan = require('morgan');
-const dbConf = require('./database.js');
+const dbConf = require('./routes/database');
 const oracledb = require('oracledb');
 const { response } = require('express');
 const router = express.Router();
@@ -18,9 +17,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', express.static('public'));
 app.use('/user', user);
+app.use('/', router);
 app.use('/proxy', (req, res) => res.json({username:'bryan'}));
 
-router.post('select', function(req, res){
+router.post('/select', function(req, res){
   oracledb.getConnection({
     user: dbConf.user,
     password: dbConf.password,
@@ -57,11 +57,11 @@ router.post('select', function(req, res){
 
 })
 
-app.get('/api/customers', (req, res) => {
-  connection.query("SELECT * FROM CUSTOMER", (err, rows, fields) => {
-    res.send(rows);
-  });
-});
+// app.get('/api/customers', (req, res) => {
+//   connection.query("SELECT * FROM CUSTOMER", (err, rows, fields) => {
+//     res.send(rows);
+//   });
+// });
 
 
 app.get('/api/customers1', (req, res) => {
