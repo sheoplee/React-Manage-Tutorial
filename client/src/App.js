@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow, withStyles } from '@material-ui/core';
+import { CircularProgress, Paper, Table, TableBody, TableCell, TableHead, TableRow, withStyles } from '@material-ui/core';
 import React, {Component} from 'react';
 import './App.css';
 import Customer from './components/Customer';
@@ -11,16 +11,29 @@ const styles = theme => ({
   },
   table: {
     minWidth: 1080
+  },
+  progress: {
+    margin: theme.spacing.unit *2
   }
 })
+
+/* React LifeCycle
+1) constructor()
+2) componentDidMount()
+3) render()
+4) componentWillMount()
+ * pros or state 변경 시 => shouldComponentUpdate()
+*/
 
 class App extends Component {
 
   state = {
-    customers:""
+    customers:"",
+    completed: 0
   }
 
   componentDidMount(){
+    this.timer = setInterval(this.progress, 10);
     this.callApi()
       .then(res => this.setState({customers: res}))
       .catch(err => console.log(err));
@@ -30,6 +43,11 @@ class App extends Component {
     const response = await fetch('http://localhost:5000/api/customers');
     const body = await response.json();
     return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 })
   }
 
   render () {
@@ -58,7 +76,12 @@ class App extends Component {
             gender = {c.gender}
             job = {c.job}
             />
-            )}) : ""
+            )}) : 
+            <TableRow>
+              <TableCell colSpan="6" align='center'>
+                <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}/>
+              </TableCell>
+            </TableRow>
           }
         </TableBody>
       </Table>        
