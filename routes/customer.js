@@ -6,6 +6,35 @@ const dbConf = require('./database');
 const oracledb = require('oracledb');
 oracledb.autoCommit = true;
 
+router.get('/1', (req, res) => {
+    res.send([
+        {
+          id: 1,
+          image: 'https://placeimg.com/32/32/1',
+          name: "홍길동",
+          birthday: "970219",
+          gender: "남자",
+          job: "대학생"
+        },
+        {
+          id: 2,
+          image: 'https://placeimg.com/64/64/2',
+          name: "김아무개",
+          birthday: "881219",
+          gender: "여자",
+          job: "회사원"
+        },
+        {
+          id: 3,
+          image: 'https://placeimg.com/64/64/3',
+          name: "이순신",
+          birthday: "781219",
+          gender: "남자",
+          job: "디자이너"
+        }
+      ]);
+});
+
 router.get('/', function(req, res) {
     oracledb.getConnection(dbConf, (err, conn) => {
         if(err){
@@ -13,8 +42,8 @@ router.get('/', function(req, res) {
           return;
         }
         
-        let query = 'select * from users';
-        conn.execute(query, [], function(err, result){
+        let query = 'select * from customers';
+        conn.execute(query, {}, function(err, result){
           if(err){
             console.error(err.message);
             doRelease(conn);
@@ -37,23 +66,33 @@ router.get('/', function(req, res) {
     }
 });
 
-router.post('/', (req, res) => {
+const multer = require('multer');
+const upload = multer({dest:'./upload'});
+router.get('/image', express.static('./upload'));
+
+router.post('/', upload.single('image'), (req, res) => {
     oracledb.getConnection(dbConf, (err, conn) => {
         if(err){
           console.error("ORA-ERROR: " + err.message);
           return;
         }
         
-        let query = 'INSERT INTO USERS (USERID, USERNAME, USERPASSWORD, USERAGE, USEREMAIL) ' +
-                    'VALUES (:USERID, :USERNAME, :USERPASSWORD, :USERAGE, :USEREMAIL)';
+        let query = 'INSERT INTO customers (id, image, name, birthday, gender, job) ' +
+                    'VALUES (:id, :image, :name, :birthday, :gender, :job)';
         
         let binddata = [
-            req.body.id,
+            Number(req.body.id),
+            '/image/' + req.file.filename,
             req.body.name,
-            req.body.password,
-            Number(req.body.age),
-            req.body.email
+            req.body.birthday,
+            req.body.gender,
+            req.body.job
         ];
+
+        console.log('' + req.body.id);
+        console.log('' + req.file.filename);
+        console.log('' + req.body.name);
+        
 
         conn.execute(query, binddata, function(err, result){
           if(err){
