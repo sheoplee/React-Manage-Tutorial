@@ -29,5 +29,6 @@
   "homepage": "https://github.com/sheoplee/React-Manage-Tutorial#readme",
   "devDependencies": {
     "concurrently": "^7.6.0"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

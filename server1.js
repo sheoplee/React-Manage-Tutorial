@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
-app.use('/', express.static('public')); // public 폴더 공유
+//app.use('/', express.static('public')); // public 폴더 공유
 
 // Body Parser 
 const bodyParser = require('body-parser');
@@ -20,6 +20,7 @@ app.use(cors());
 // Router
 const user = require('./routes/user');
 const customer = require('./routes/customer');
+app.use('/image', express.static('upload'));
 app.use('/user', user);
 app.use('/customer', customer);
 

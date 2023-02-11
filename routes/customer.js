@@ -68,7 +68,6 @@ router.get('/', function(req, res) {
 
 const multer = require('multer');
 const upload = multer({dest:'./upload'});
-router.get('/image', express.static('./upload'));
 
 router.post('/', upload.single('image'), (req, res) => {
     oracledb.getConnection(dbConf, (err, conn) => {

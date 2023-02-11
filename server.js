@@ -20,6 +20,8 @@ app.use('/', express.static('public'));
 app.use('/user', user);
 app.use('/proxy', (req, res) => res.json({username:'bryan'}));
 
+app.get('/image', express.static('./upload'));
+
 router.post('select', function(req, res){
   oracledb.getConnection({
     user: dbConf.user,
