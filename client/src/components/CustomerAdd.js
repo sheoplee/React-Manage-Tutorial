@@ -1,5 +1,4 @@
 import React from "react";
-import { post } from 'axios';
 import axios from 'axios';
 
 class CustomerAdd extends React.Component {
@@ -38,6 +37,7 @@ class CustomerAdd extends React.Component {
     this.addCustomer()
         .then((res) => {
             console.log(res.data);
+            this.props.stateRefresh();
         });
     this.setState({
         id: 0,
@@ -48,7 +48,6 @@ class CustomerAdd extends React.Component {
         job: '',
         fileName: ''
     });
-    window.location.reload();
   }
 
   handleFileChange = (e) => {
