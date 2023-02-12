@@ -6,34 +6,15 @@ const dbConf = require('./database');
 const oracledb = require('oracledb');
 oracledb.autoCommit = true;
 
-router.get('/1', (req, res) => {
-    res.send([
-        {
-          id: 1,
-          image: 'https://placeimg.com/32/32/1',
-          name: "홍길동",
-          birthday: "970219",
-          gender: "남자",
-          job: "대학생"
-        },
-        {
-          id: 2,
-          image: 'https://placeimg.com/64/64/2',
-          name: "김아무개",
-          birthday: "881219",
-          gender: "여자",
-          job: "회사원"
-        },
-        {
-          id: 3,
-          image: 'https://placeimg.com/64/64/3',
-          name: "이순신",
-          birthday: "781219",
-          gender: "남자",
-          job: "디자이너"
-        }
-      ]);
-});
+// DB 연결해제
+function doRelease(conn, message){
+      conn.release(function(err){
+          if(err){
+              console.error(err.message);
+          }
+          console.log(message);
+      })
+}
 
 router.get('/', function(req, res) {
     oracledb.getConnection(dbConf, (err, conn) => {
@@ -49,21 +30,11 @@ router.get('/', function(req, res) {
             doRelease(conn);
             return;
           }
-          // console.log(result.rows);
-          doRelease(conn, result.rows);
+          // console.log(result.rows);          
+          doRelease(conn, "Row Count : " + result.rows.length);
+          res.send(result.rows);
         });
     });
-
-    // DB 연결해제
-    function doRelease(conn, rows){
-        conn.release(function(err){
-            if(err){
-                console.error(err.message);
-            }
-            console.log('list size:' + rows.length);
-            res.send(rows);
-        })
-    }
 });
 
 const multer = require('multer');
@@ -76,7 +47,7 @@ router.post('/', upload.single('image'), (req, res) => {
           return;
         }
         
-        let query = 'INSERT INTO customers (id, image, name, birthday, gender, job) ' +
+        let query = 'INSERT INTO customers (id, image, name, birthday, gender, job, createddate, isDeleted) ' +
                     'VALUES (:id, :image, :name, :birthday, :gender, :job, SYSDATE, 0)';
         
         let binddata = [
@@ -94,20 +65,10 @@ router.post('/', upload.single('image'), (req, res) => {
             doRelease(conn);
             return;
           }
-          console.log('Row Insert ' + result.rowsAffected);
-          doRelease(conn, result.rowsAffected);
+          doRelease(conn, 'Row Insert ' + result.rowsAffected);
+          res.send('' + result.rowsAffected);
         });
     });
-
-    // DB 연결해제
-    function doRelease(conn, result){
-        conn.release(function(err){
-            if(err){
-                console.error(err.message);
-            }
-            res.send('' + result);
-        })
-    }
 });
 
 router.get('/:id', function(req, res) {
@@ -147,20 +108,10 @@ router.delete('/:id', function(req, res) {
         doRelease(conn);
         return;
       }
-      console.log('Row Detete : ' + result.rowsAffected);
-      doRelease(conn, result.rowsAffected);
+      doRelease(conn, 'Row Detete : ' + result.rowsAffected)
+      res.send('' + result.rowsAffected);
     });
   });
-
-  // DB 연결해제
-  function doRelease(conn, result){
-      conn.release(function(err){
-          if(err){
-              console.error(err.message);
-          }
-          res.send('' + result);
-      })
-  }
 });
 
 module.exports = router;
