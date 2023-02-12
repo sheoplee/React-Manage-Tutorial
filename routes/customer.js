@@ -42,14 +42,14 @@ router.get('/', function(req, res) {
           return;
         }
         
-        let query = 'select * from customers';
+        let query = 'select * from customers where isDeleted = 0';
         conn.execute(query, {}, function(err, result){
           if(err){
             console.error(err.message);
             doRelease(conn);
             return;
           }
-          console.log(result.rows);
+          // console.log(result.rows);
           doRelease(conn, result.rows);
         });
     });
@@ -77,7 +77,7 @@ router.post('/', upload.single('image'), (req, res) => {
         }
         
         let query = 'INSERT INTO customers (id, image, name, birthday, gender, job) ' +
-                    'VALUES (:id, :image, :name, :birthday, :gender, :job)';
+                    'VALUES (:id, :image, :name, :birthday, :gender, :job, SYSDATE, 0)';
         
         let binddata = [
             Number(req.body.id),
@@ -87,11 +87,6 @@ router.post('/', upload.single('image'), (req, res) => {
             req.body.gender,
             req.body.job
         ];
-
-        console.log('' + req.body.id);
-        console.log('' + req.file.filename);
-        console.log('' + req.body.name);
-        
 
         conn.execute(query, binddata, function(err, result){
           if(err){
@@ -131,8 +126,41 @@ router.put('/', function(req, res) {
     res.status(400).json({message:'Hey, You. Bad Request!'});
 });
 
-router.delete('/', function(req, res) {
-    res.send('Received a DELETE request');
+router.delete('/:id', function(req, res) {
+  oracledb.getConnection(dbConf, (err, conn) => {
+    if(err){
+      console.error("ORA-ERROR: " + err.message);
+      return;
+    }
+    
+    let query = 'UPDATE customers SET isDeleted = 1 ' +
+                'WHERE id = :id';
+    
+    let binddata = [
+        Number(req.params.id)
+    ];
+    console.log('req.params.id : ' + req.params.id);
+
+    conn.execute(query, binddata, function(err, result){
+      if(err){
+        console.error(err.message);
+        doRelease(conn);
+        return;
+      }
+      console.log('Row Detete : ' + result.rowsAffected);
+      doRelease(conn, result.rowsAffected);
+    });
+  });
+
+  // DB 연결해제
+  function doRelease(conn, result){
+      conn.release(function(err){
+          if(err){
+              console.error(err.message);
+          }
+          res.send('' + result);
+      })
+  }
 });
 
 module.exports = router;
