@@ -23,6 +23,7 @@ router.get('/', function(req, res) {
           return;
         }
         
+        // let query = 'select * from customers';
         let query = 'select * from customers where isDeleted = 0';
         conn.execute(query, {}, function(err, result){
           if(err){
@@ -48,11 +49,14 @@ router.post('/', upload.single('image'), (req, res) => {
         }
         
         let query = 'INSERT INTO customers (id, image, name, birthday, gender, job, createddate, isDeleted) ' +
-                    'VALUES (:id, :image, :name, :birthday, :gender, :job, SYSDATE, 0)';
-        
+                     'VALUES (:id, :image, :name, :birthday, :gender, :job, SYSDATE, 0)';
+        // let query = 'INSERT INTO customers (id, image, name, birthday, gender, job, createddate) ' +
+        //             'VALUES (:id, :image, :name, :birthday, :gender, :job, SYSDATE)';
+        console.log(req.file);
         let binddata = [
             Number(req.body.id),
             '/image/' + req.file.filename,
+            // '/image/' + req.body.filename,
             req.body.name,
             req.body.birthday,
             req.body.gender,

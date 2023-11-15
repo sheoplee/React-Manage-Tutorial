@@ -13,7 +13,7 @@ router.get('/', function(req, res) {
           return;
         }
         
-        let query = 'select * from users';
+        let query = 'select * from member';
         conn.execute(query, [], function(err, result){
           if(err){
             console.error(err.message);

@@ -29,6 +29,7 @@ class CustomerAdd extends React.Component {
     const formData = new FormData();
     formData.append('id', this.state.id);
     formData.append('image', this.state.file);
+    formData.append('filename', this.state.file.name);
     formData.append('name', this.state.userName);
     formData.append('birthday', this.state.birthday);
     formData.append('gender', this.state.gender);
@@ -101,10 +102,10 @@ class CustomerAdd extends React.Component {
         <Dialog open={this.state.open} onClose={this.handleClickClose}>
           <DialogTitle>고객 추가</DialogTitle>
           <DialogContent>
-            <input className={classes.hidden} accept="image/*" id="raised-button-file" type="file" file={this.state.file} value={this.state.filename} onChange={this.handleFileChange}/>
+            <input className={classes.hidden} accept="image/*" id="raised-button-file" type="file" file={this.state.file} value={this.state.fileName} onChange={this.handleFileChange}/>
             <label htmlFor="raised-button-file">
               <Button variant="contained" color="primary" component="span" name="file">
-                {this.state.fileName === "" ? "포로필 이미지 선택" : this.state.fileName}
+                {this.state.fileName === "" ? "프로필 이미지 선택" : this.state.fileName}
               </Button>
             </label>
             <br/>
