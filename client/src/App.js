@@ -83,8 +83,10 @@ class App extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            { this.state.customers ? this.state.customers.map(c => { return (
-              <Customer stateRefresh={this.stateRefresh} key={c[0]} id={c[0]} image={c[1]} name={c[2]} birthday={c[3]} gender={c[4]} job={c[5]} />
+            { this.state.customers ? 
+              this.state.customers.map(c => { return (
+                <Customer stateRefresh={this.stateRefresh} 
+                  key={c[0]} id={c[0]} image={c[1]} name={c[2]} birthday={c[3]} gender={c[4]} job={c[5]} />
               )}) : 
               <TableRow>
                 <TableCell colSpan="6" align='center'>

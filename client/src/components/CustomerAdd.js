@@ -29,7 +29,7 @@ class CustomerAdd extends React.Component {
     const formData = new FormData();
     formData.append('id', this.state.id);
     formData.append('image', this.state.file);
-    formData.append('filename', this.state.file.name);
+    // formData.append('filename', this.state.file.name);
     formData.append('name', this.state.userName);
     formData.append('birthday', this.state.birthday);
     formData.append('gender', this.state.gender);

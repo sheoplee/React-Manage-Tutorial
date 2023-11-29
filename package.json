@@ -33,7 +33,8 @@
   },
   "homepage": "https://github.com/sheoplee/React-Manage-Tutorial#readme",
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.6.0",
+    "nodemon": "^3.0.1"
   },
   "proxy": "http://localhost:5000"
 }

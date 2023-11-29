@@ -31,7 +31,7 @@ router.get('/', function(req, res) {
             doRelease(conn);
             return;
           }
-          // console.log(result.rows);          
+          console.log(result.rows);          
           doRelease(conn, "Row Count : " + result.rows.length);
           res.send(result.rows);
         });
@@ -50,13 +50,10 @@ router.post('/', upload.single('image'), (req, res) => {
         
         let query = 'INSERT INTO customers (id, image, name, birthday, gender, job, createddate, isDeleted) ' +
                      'VALUES (:id, :image, :name, :birthday, :gender, :job, SYSDATE, 0)';
-        // let query = 'INSERT INTO customers (id, image, name, birthday, gender, job, createddate) ' +
-        //             'VALUES (:id, :image, :name, :birthday, :gender, :job, SYSDATE)';
         console.log(req.file);
         let binddata = [
             Number(req.body.id),
             '/image/' + req.file.filename,
-            // '/image/' + req.body.filename,
             req.body.name,
             req.body.birthday,
             req.body.gender,
